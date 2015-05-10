@@ -45,7 +45,7 @@ class KeyboardStructureError(ValueError):
 
 
 class KeyboardString(str):
-	"""A Keyboard sttring.
+	"""A Keyboard string.
 
 	Like a regular string, but with a type() method that will describe how to
 	type the contents of the string using a two-finger hunt and peck method.
