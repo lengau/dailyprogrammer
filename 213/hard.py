@@ -123,7 +123,7 @@ def fast_stepstring_discrepancy(string, plus='a', minus='b'):
 
 
 if __name__ == '__main__':
-	print('Performing tests…')
+	print('Performing tests...')
 	import doctest
 	doctest.testmod()
 	test_input = [
