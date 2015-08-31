@@ -1,0 +1,42 @@
+As is done in my naïve approach, you only need to check multiples of 7 in the
+first place.
+
+Based on the below, Python doesn't seem to take any longer to do mod-7 for
+large numbers than it does for small numbers:
+
+lengau@hyperion:~$ pypy -m timeit '353%7'
+1000000000 loops, best of 3: 0.000489 usec per loop
+lengau@hyperion:~$ pypy -m timeit '35234623475454634756564535432705843567430982473819047123523623353%7'
+1000000000 loops, best of 3: 0.00049 usec per loop
+lengau@hyperion:~$ python2 -m timeit '35234623475454634756564535432705843567430982473819047123523623353%7'
+100000000 loops, best of 3: 0.0138 usec per loop
+lengau@hyperion:~$ python2 -m timeit '353%7'
+100000000 loops, best of 3: 0.0139 usec per loop
+lengau@hyperion:~$ python3 -m timeit '353%7'
+100000000 loops, best of 3: 0.0114 usec per loop
+lengau@hyperion:~$ python3 -m timeit '35234623475454634756564535432705843567430982473819047123523623353%7'
+100000000 loops, best of 3: 0.0109 usec per loop
+
+Given the tiny amount of time it takes (especially using pypy), halving our
+divisions by putting in an if statement to check if the reversed integer is
+larger is probably unnecessary.
+
+
+The performance characteristics of Python make string conversion quicker:
+!lengau@hyperion:~/Projects/dailyprogrammer/229$ python3 -m timeit -s "from hard import reverse" "reverse(198051890495785697649211154192)"
+100000 loops, best of 3: 5.29 usec per loop
+!lengau@hyperion:~/Projects/dailyprogrammer/229$ python -m timeit -s "from hard import reverse" "reverse(198051890495785697649211154192)"
+100000 loops, best of 3: 9.86 usec per loop
+!lengau@hyperion:~/Projects/dailyprogrammer/229$ pypy -m timeit -s "from hard import reverse" "reverse(198051890495785697649211154192)"
+100000 loops, best of 3: 3.53 usec per loop
+!lengau@hyperion:~/Projects/dailyprogrammer/229$ pypy -m timeit "int(str(198051890495785697649211154192)[::-1])"
+1000000 loops, best of 3: 0.307 usec per loop
+!lengau@hyperion:~/Projects/dailyprogrammer/229$ python -m timeit "int(str(198051890495785697649211154192)[::-1])"
+1000000 loops, best of 3: 0.717 usec per loop
+!lengau@hyperion:~/Projects/dailyprogrammer/229$ python3 -m timeit "int(str(198051890495785697649211154192)[::-1])"
+1000000 loops, best of 3: 0.499 usec per loop
+!lengau@hyperion:~/Projects/dailyprogrammer/229$ pypy -m timeit -s "from hard import reverse" "reverse(19)"
+10000000 loops, best of 3: 0.0752 usec per loop
+!lengau@hyperion:~/Projects/dailyprogrammer/229$ pypy -m timeit "int(str(19)[::-1])"
+10000000 loops, best of 3: 0.039 usec per loop
+
