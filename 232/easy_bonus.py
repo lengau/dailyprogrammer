@@ -71,6 +71,8 @@ def generate_palindromes_smart():
             last_words = end[letter]
             for first_word in first_words:
                 for last_word in last_words:
+                    if first_word == last_word:
+                        continue
                     candidate = ''.join((first_word, last_word))
                     if candidate == candidate[::-1]:
                         yield ' '.join((first_word, last_word))
