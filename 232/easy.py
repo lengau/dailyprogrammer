@@ -33,9 +33,9 @@ class Palindrome:
 
     def __make_alphabetical(self) -> None:
         """Strip everything but letters and make lowercase.."""
-        #self.candidate = ''.join(
-        #    [i.lower() for i in self.candidate if i in string.ascii_letters])
-        self.candidate = [i.lower() for i in self.candidate if i in string.ascii_letters]
+        self.candidate = ''.join(
+            [i for i in self.candidate if i in string.ascii_letters])
+        self.candidate = self.candidate.lower()
 
     def is_palindrome(self) -> bool:
         """Is this string actually a palindrome?"""
