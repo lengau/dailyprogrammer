@@ -16,6 +16,7 @@ from typing import List, TextIO, Union
 
 TEST_ANSWERS = [True, False, False, True, True, True]
 
+
 class Palindrome:
     """A potential palindrome.
 

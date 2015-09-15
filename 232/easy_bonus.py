@@ -36,6 +36,64 @@ def generate_palindromes():
                 yield candidate
 
 
+LETTERS = 'abcdefghijklmnopqrstuvwxyz'
+
+
+def generate_palindromes_smart():
+    """
+    Below is a (hopefully) better way to do it. The words are sorted into a pair
+    of dictionaries by their first and last letter. Each entry in the dictionaries
+    contains the second and penultimate letters. Those inner dictionaries contain
+    the words themselves.
+
+    E.g. for the dictionary containing cat, rat, it would be equivalent
+    to declaring:
+    first_letter = {
+        'c': {
+            'a': ['cat']
+        }
+        'r': {
+            'a': ['rat']
+        }
+    }
+    last_letter = {
+        't': {
+            'a': ['cat', 'rat']
+        }
+    }
+    """
+    first_letter, last_letter = generate_dictionaries()
+    for letter in LETTERS:
+        start = first_letter[letter]
+        end = last_letter[letter]
+        for letter in LETTERS:
+            first_words = start[letter]
+            last_words = end[letter]
+            for first_word in first_words:
+                for last_word in last_words:
+                    candidate = ''.join((first_word, last_word))
+                    if candidate == candidate[::-1]:
+                        yield ' '.join((first_word, last_word))
+
+
+def fill_dictionary(dictionaries, constructor):
+    for dictionary in dictionaries:
+        for letter in LETTERS:
+            dictionary[letter] = constructor()
+
+
+def generate_dictionaries():
+    first_letter = {}
+    last_letter = {}
+    fill_dictionary((first_letter, last_letter), dict)
+    fill_dictionary(first_letter.values(), list)
+    fill_dictionary(last_letter.values(), list)
+    for word in DICTIONARY:
+        first_letter[word[0]][word[1]].append(word)
+        last_letter[word[-1]][word[-2]].append(word)
+    return first_letter, last_letter
+
+
 if __name__ == '__main__':
-    for p in generate_palindromes():
+    for p in generate_palindromes_smart():
         print(p)
