@@ -70,29 +70,32 @@ def main():
         for line in file.readlines():
             cards.append(Card.from_string(line))
 
-    expected = set()
-    with open(sys.argv[2]) as file:
-        for line in file.readlines():
-            expected.add(line)
+    if len(sys.argv) > 2:
+        expected = set()
+        with open(sys.argv[2]) as file:
+            for line in file.readlines():
+                expected.add(line)
 
     output = set()
     for first, second, third in generate_sets(cards):
         output.add('%s %s %s\n' % (first, second, third))
 
-    print('Expected:')
-    for line in expected:
-        print(line, end='')
+    if len(sys.argv) > 2:
+        print('Expected:')
+        for line in expected:
+            print(line, end='')
 
     print('Output:')
     for line in output:
         print(line, end='')
 
-    try:
-        assert output == expected
-    except AssertionError:
-        print('Test failed.')
-    else:
-        print('Test passed.')
+    if len(sys.argv) > 2:
+        try:
+            assert output == expected
+        except AssertionError:
+            print('Test failed.')
+        else:
+            print('Test passed.')
 
 def generate_sets(cards):
     for i in range(len(cards) - 2):
