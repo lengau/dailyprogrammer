@@ -163,7 +163,7 @@ class Castle(object):
                     continue
             except IndexError:
                 continue
-            if random.randint(0, 1):
+            if random.randint(0, 2):
                 continue
             canvas_x = 4 * x + 1
             canvas_y = 2 * y + 1
