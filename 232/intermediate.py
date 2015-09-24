@@ -21,7 +21,7 @@ class House(object):
 
         I used __matmul__ for this because it has the nice-looking "@" operator.
         """
-        return sqrt((self.x - other.x)**2 + (self.y - other.y)**2)
+        return (self.x - other.x)**2 + (self.y - other.y)**2
 
     def __str__(self) -> str:
         return '(%s,%s)' % (self.x, self.y)
@@ -55,9 +55,9 @@ class Neighbourhood(object):
         closest_houses = (self.houses[-2], self.houses[-1])
         for i in range(len(self.houses) - 2):
             for j in range(i+1, len(self.houses)):
-                distance = self.houses[i] @ self.houses[j]
                 if self.houses[j].x - self.houses[i].x >= shortest_distance:
                     break
+                distance = self.houses[i] @ self.houses[j]
                 if distance < shortest_distance:
                     shortest_distance = distance
                     closest_houses = (self.houses[i], self.houses[j])
