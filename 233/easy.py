@@ -44,12 +44,13 @@ class Castle(object):
         self.width = 1 + 4 * len(rows[-1])
         self.height = 1 + 2 * len(rows)
         self.roof_height = 2 * max(len(roof) for roof in rows[0].split())
-        self.drawn = False
-        self.drawn_shadow = False
+        self.make_canvas()
 
     def make_canvas(self):
-        self.shadow = [[' ' for _ in range(self.width)] for _ in range(self.height + self.roof_height)]
-        self.canvas = [[' ' for _ in range(self.width)] for _ in range(self.height + self.roof_height)]
+        self.shadow = [[' ' for _ in range(self.width)]
+                       for _ in range(self.height + self.roof_height)]
+        self.canvas = [[' ' for _ in range(self.width)]
+                       for _ in range(self.height + self.roof_height)]
         self.drawn = False
         self.drawn_shadow = False
 
@@ -70,7 +71,8 @@ class Castle(object):
         """Count the number of neighbours that are outside the house."""
         neighbours_outside = 0
         for dy, dx in product((-1, 0, 1), repeat=2):
-            if y + dy < 0 or y + dy >= self.height or x + dx < 0 or x + dx >= self.width:
+            if (y + dy < 0 or y + dy >= self.height
+                  or x + dx < 0 or x + dx >= self.width):
                 neighbours_outside += 1
             else:
                 location = self.shadow[y + dy][x + dx]
@@ -91,6 +93,8 @@ class Castle(object):
 
     def draw_building(self, fill=' '):
         """Draw the ASCII house/castle."""
+        if not self.drawn_shadow:
+            self.draw_shadow()
         for x, y in product(range(self.width), range(self.height)):
             if self.shadow[y][x].isspace():
                 continue
@@ -104,6 +108,7 @@ class Castle(object):
             else:
                 if not fill.isspace():
                     self.canvas[y][x] = fill
+        self.drawn = True
 
     def draw_doors(self, door='|‾|'):
         """Add the door in the appropriate spot.
@@ -113,6 +118,8 @@ class Castle(object):
         towers. The number of doors corresponds 1:1 with the number of
         towers.
         """
+        if not self.drawn:
+            self.draw_building()
         door_towers = self.blueprint[0].split()
         last_index = 0
         for tower in door_towers:
@@ -124,8 +131,11 @@ class Castle(object):
             for i, char in enumerate(door):
                 self.canvas[1][door_start + i] = char
 
-    def draw_roof(self, roof_left='/', roof_right='\\', roof_top='A', towers_only=False):
+    def draw_roof(self, roof_left='/', roof_right='\\', roof_top='A',
+                  towers_only=False):
         """Add pointed roofs."""
+        if not self.drawn:
+            self.draw_building()
         roofs = []  # Contains tuples of (y, x_start, x_end)
         last_height = -1
         for x, y in product(range(self.width), range(self.height)):
@@ -156,6 +166,8 @@ class Castle(object):
 
     def draw_windows(self, window='□'):
         """Randomly draw some windows on the house."""
+        if not self.drawn:
+            self.draw_building()
         for x, y in product(range(len(self.blueprint[-1])),
                             range(len(self.blueprint))):
             try:
@@ -174,10 +186,9 @@ def main():
     for test in TESTS:
         c = Castle(test)
         c.make_canvas()
-        c.draw_shadow()
         c.draw_building()
         c.draw_doors()
-        c.draw_roof()
+        c.draw_roof(towers_only=True)
         c.draw_windows()
         print(c)
 
