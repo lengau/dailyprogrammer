@@ -5,6 +5,7 @@
 from functools import reduce
 from itertools import combinations_with_replacement as combine
 import operator
+import sys
 
 # Inputs are defined by the number of digits required in the vampire and the
 # number of fangs to expect.
@@ -26,7 +27,7 @@ def generate_vampires(digits, fangs):
             yield vampire_candidate, fangs
 
 
-def print_vampires(digits, num_fangs):
+def print_vampires(digits, num_fangs, print_summary=True):
     vampire_list = sorted(generate_vampires(digits, num_fangs))
     i = 0
     last_vampire = 0
@@ -39,11 +40,12 @@ def print_vampires(digits, num_fangs):
         print('%s = %s' % (
             vampire_string, '*'.join(str(fang) for fang in fangs)))
         last_vampire = vampire
-    print('There are %d vampire numbers with %d digits and %d fangs' % (
-        i, digits, num_fangs))
+    if print_summary:
+        print('There are %d vampire numbers with %d digits and %d fangs' % (
+            i, digits, num_fangs))
 
 
-def main():
+def test():
     print('Test:')
     print_vampires(*TEST_INPUT)
 
@@ -51,5 +53,18 @@ def main():
     print_vampires(*CHALLENGE_INPUT)
 
 
+def main():
+    digits = int(sys.argv[1])
+    fangs = int(sys.argv[2])
+    print_summary = True
+    if len(sys.argv) > 3:
+        if sys.argv[3].lower() in ('no', 'false'):
+            print_summary = False
+    print_vampires(digits, fangs, print_summary)
+
+
 if __name__ == '__main__':
-    main()
+    if len(sys.argv) == 1:
+        test()
+    else:
+        main()
